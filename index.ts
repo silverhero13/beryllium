@@ -13,6 +13,13 @@ app.get("/healthcheck", (req, res) => {
   res.send("Hello, world!");
 });
 
+app.get('/users', async (req, res) => {
+  const result = await connection.query("SELECT * FROM users")
+  const users = result[0]
+
+  res.send(users)
+})
+
 app.listen(port, async () => {
   connection = await mysql.createConnection({
     host: 'localhost',
