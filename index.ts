@@ -13,28 +13,48 @@ app.get("/healthcheck", (req, res) => {
   res.send("Hello, world!");
 });
 
-app.get("/users", async (req, res) => {
-  const result = await connection.query("SELECT * FROM users");
-  const users = result[0];
+app.get("/menu", async (req, res) => {
+  const result = await connection.query("SELECT * FROM menu");
+  const menu = result[0];
 
-  res.send(users);
+  res.send(menu);
 });
 
-app.post("/users", async (req, res) => {
-  const request_body = req.body;
+app.post("/menu", async (req, res) => {
+  const { name, price, type } = req.body;
 
-  const user_first_name = request_body.first_name;
-  const user_last_name = request_body.last_name;
-  const user_age = request_body.age;
-  const user_sex = request_body.sex;
-  const user_is_employed = request_body.is_employed;
+  if (!name || !price || !type) {
+    res.status(400).send();
+    return;
+  }
 
-  connection.query(
-    "INSERT INTO users (first_name, last_name, age, sex, is_employed) VALUES (?, ?, ?, ?, ?);",
-    [user_first_name, user_last_name, user_age, user_sex, user_is_employed]
-  );
+  connection.query("INSERT INTO menu (name, price, type) VALUES (?, ?, ?)", [
+    name,
+    price,
+    type,
+  ]);
 
   res.status(201).send();
+});
+
+app.delete("/menu/:id", async (req, res) => {
+  connection.query("DELETE FROM menu WHERE id=?", [req.params.id]);
+
+  res.status(204).send();
+});
+
+app.patch("/menu/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, price, type } = req.body;
+
+  connection.query("UPDATE menu SET name=?, price=?, type=? WHERE id=?", [
+    name,
+    price,
+    type,
+    id,
+  ]);
+
+  res.status(204).send();
 });
 
 app.listen(port, async () => {
