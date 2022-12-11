@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import mysql, { Connection } from "mysql2/promise";
 
 const app = express();
-const port = 3000;
+const port = 1234;
 
 let connection: Connection;
 
