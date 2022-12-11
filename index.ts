@@ -22,7 +22,7 @@ app.get("/healthcheck", (req, res) => {
 });
 
 app.get("/menu", async (req, res) => {
-  const result = await connection.query("SELECT * FROM menu");
+  const result = await connection.query("SELECT * FROM menu ORDER BY name ASC");
   const menu = result[0];
 
   res.send(menu);
